@@ -28,6 +28,9 @@ def main(args: argparse.Namespace, duckdns : bool = False) -> None:
         print("[!] please just type a integer")
         return
     
+    TOKEN = args.token if args.token else os.environ.get("DUCKDNS_TOKEN")
+    DOMAIN = args.domain if args.domain else os.environ.get("DUCKDNS_DOMAIN")
+    
     gateway : str = get_gateway_ip()
     
     client : ModemHttpClient = list(MODEM_CLIENTS.values())[selected_modem]
@@ -55,11 +58,15 @@ def main(args: argparse.Namespace, duckdns : bool = False) -> None:
     TIME_INTERVAL : int = 5
     
     if duckdns:
-        print(f"[?] updating duckdns (5 minutes)")
+        print(f"[?] updating duckdns ({TIME_INTERVAL} minutes)")
         print()
         while True:
             
-            print(datetime.datetime.now().strftime("[%m-%d-%Y %H:%M:%S]\t") + duckdns_update(args.domain,args.token,ip_addr))
+            time_now = datetime.datetime.now().strftime("[%m-%d-%Y %H:%M:%S]\t")
+            
+            response_ddns = duckdns_update(args.domain,args.token,ip_addr)
+            
+            print(time_now + response_ddns)
             
             time.sleep(TIME_INTERVAL * 60)
     return

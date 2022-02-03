@@ -62,7 +62,7 @@ class TPLinkModemHTTPClient(ModemHttpClient):
         ee = response.text.split('\n')[0].split('"')[1]
         nn = response.text.split('\n')[1].split('"')[1]
         
-        with open('rsa.js','r') as f:
+        with open('utils/js/rsa.js','r') as f:
             encryptJs = f.read()
         
         encryptJs_password = encryptJs + f"rsaEncrypt('{base64.b64encode(self.password.encode()).decode()}','{nn}','{ee}');\n"
