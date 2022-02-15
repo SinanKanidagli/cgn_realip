@@ -44,7 +44,6 @@ def main(args: argparse.Namespace, duckdns : bool = False) -> None:
     if response.status_code != 200:
         raise Exception()
     
-    
     print(f"[?] fetching ip address")
     
     ip_addr = client.get_public_ip()
@@ -58,16 +57,11 @@ def main(args: argparse.Namespace, duckdns : bool = False) -> None:
     TIME_INTERVAL : int = 5
     
     if duckdns:
-        print(f"[?] updating duckdns ({TIME_INTERVAL} minutes)")
-        print()
+        print(f"[?] updating duckdns ({TIME_INTERVAL} minutes)\n")
         while True:
-            
             time_now = datetime.datetime.now().strftime("[%m-%d-%Y %H:%M:%S]\t")
-            
-            response_ddns = duckdns_update(args.domain,args.token,ip_addr)
-            
+            response_ddns = duckdns_update(DOMAIN,TOKEN,ip_addr)
             print(time_now + response_ddns)
-            
             time.sleep(TIME_INTERVAL * 60)
     return
 
@@ -78,8 +72,8 @@ def get_gateway_ip() -> str :
 
 def duckdns_update(domain, token, ip, verbose=False):
     params = {
-        "domains": domain if domain else os.environ.get("DUCKDNS_DOMAINS"),
-        "token": token if token else os.environ.get("DUCKDNS_TOKEN"),
+        "domains": domain,
+        "token": token,
         "ip": ip,
         "verbose": verbose
     }
